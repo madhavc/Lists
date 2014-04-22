@@ -114,8 +114,8 @@ public interface List<K extends Comparable<K>,V> {
 	  @          still in the List at \post and if it wasn't in
 	  @          the list at \pre, it's not in the list at \post,
 	  @          There now  exists an string containing a visual 
-      @          representation of each value that was in the list
-      @          at pre.
+          @          representation of each value that was in the list
+          @          at pre.
 	  @*/
 	public abstract String toString (); 
 	
