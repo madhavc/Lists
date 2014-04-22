@@ -1,16 +1,14 @@
 /**
- * This file pedagogical material for the course
+ * This file is from the material for the course
  * CS 240: Data Structures and Algorithms
  * taught at California State Polytechnic University - Pomona, and
  * cannot be used without express written consent from the author.
  * 
- * Copyright (c) 2013 - Edwin Rodr&iacute;guez.
+ * Copyright (c) 2013 - Madhav Chhura
  * 
- * @author Edwin Rodr&iacute;guez, student Madhav Chhura
+ * @author Madhav Chhura
  * 
  */
-package edu.csupomona.cs.cs240.prog_assgmnt_1;
-
 public class SimpleBoundedList<K extends Comparable<K>,V> implements List<K, V> 
 {
 
