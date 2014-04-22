@@ -1,4 +1,15 @@
-import java.util.*;
+/**
+ * This file is from the material for the course
+ * CS 240: Data Structures and Algorithms
+ * taught at California State Polytechnic University - Pomona, and
+ * cannot be used without express written consent from the author.
+ * 
+ * Copyright (c) 2013 - Madhav Chhura
+ * 
+ * @author Madhav Chhura
+ * 
+ */
+ import java.util.*;
 
 public class TesterClass 
 {
