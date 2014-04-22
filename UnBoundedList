@@ -1,0 +1,78 @@
+/**
+ * This file pedagogical material for the course
+ * CS 240: Data Structures and Algorithms
+ * taught at California State Polytechnic University - Pomona, and
+ * cannot be used without express written consent from the author.
+ * 
+ * Copyright (c) 2013 - Edwin Rodr&iacute;guez.
+ * 
+ * @author Edwin Rodr&iacute;guez, student Madhav Chhura
+ * 
+ */
+
+package edu.csupomona.cs.cs240.prog_assgmnt_1;
+
+
+public class UnboundedList<K extends Comparable<K>,V> extends SimpleBoundedList<K,V> {
+	
+	/**
+     * This is the default constructor for the 
+     * {@link UnboundedList} class. When created 
+     * it calls the super class constructor and sets 
+     * the {@link #start} & {@link #nextEmpty} to 0 
+     * indicating no items in array and {@link #bound} 
+     * is the size determined by the user which cannot 
+     * be modified after being created.   
+     */
+	public UnboundedList(int bound) 
+	{
+		super(bound);
+	}
+
+	/**
+     * This method calls the super class method add and 
+     * adds an {@link value} to {@link #values}.
+     * The value added by the method is specified by the user,
+     * and it is added to the very end of the {@link #values}.
+     * If {@link values} is full the method does not add the 
+     * {@link value] and returns {@code true}. This method also
+     * calls the (@link ensureCapacity) method.   
+     */
+	public boolean add(K key, V value) 
+	{
+		ensureCapacity();
+		super.add(key, value);
+		
+		return true;
+	}
+
+	/**
+     * This method creates a new array containing all of 
+     * the elements in {@link #values}. This new array is 
+     * double the size of the {@link #values}. It is then used 
+     * to replace {@link #values} in order to provide more 
+     * storage for {@link value} in the list. This way an 
+     * {@link value} can always be added to the list, because it's 
+     * space is infinite. 
+     */
+	private void ensureCapacity() 
+	{
+		if (this.size() == this.values.length) 
+		{
+			Object[] newArray = new Object[values.length * 2];
+			
+			int currentValue = start;
+			
+			for (int i = 0; i < values.length; ++i) 
+			{
+				newArray[i] = values[currentValue];
+				currentValue = (currentValue + 1) % values.length;
+			}
+			start = 0;
+			nextEmpty = (values.length - 1);
+			this.values = newArray;
+		}
+		
+	}
+
+}
