@@ -1,0 +1,282 @@
+/**
+ * This file pedagogical material for the course
+ * CS 240: Data Structures and Algorithms
+ * taught at California State Polytechnic University - Pomona, and
+ * cannot be used without express written consent from the author.
+ * 
+ * Copyright (c) 2013 - Edwin Rodr&iacute;guez.
+ * 
+ * @author Edwin Rodr&iacute;guez, student Madhav Chhura
+ * 
+ */
+package edu.csupomona.cs.cs240.prog_assgmnt_1;
+
+public class SimpleBoundedList<K extends Comparable<K>,V> implements List<K, V> 
+{
+
+	protected Object[] values;
+	/**
+     * This is the field which contains the index of the 
+     * first {@link Object} in {@link #values}. 
+     */
+	protected int start = 0;
+	
+	/**
+     * This is the field which contains the index of the 
+     * first {@link Object} in {@link #values}. 
+     */
+	protected int nextEmpty = 0;
+	
+	private int index = 0;
+
+	/**
+     * This is the default constructor for the 
+     * {@link SimpleBoundedList} class. When created 
+     * {@link #start} & {@link #nextEmpty} are initially
+     * both set to value 0 indicating no items in array
+     * and {@link #bound} is the size determined by the 
+     * user which cannot be modified after being created.   
+     */
+	public SimpleBoundedList(int bound) //Constructor
+	{
+		values = new Object[bound];
+	}
+
+	/**
+     * This method adds an {@link value} to {@link #values} list.
+     * The value added by the method is specified by the user,
+     * and it is added to the very end of the {@link #values} list.
+     * If the list {@link values} is full the method does not adds the 
+     * {@link value} and returns {@code true} 
+     * 
+     * @return {@link value}
+     *         or {@code true}, if the list is full
+     */
+	public boolean add(K key, V value) {
+		boolean modify = false;
+		int nextIndex = nextEmpty;
+
+		if (((nextEmpty + 1) % values.length) != start)
+		{
+			nextEmpty = (nextEmpty + 1) % values.length;
+			modify = true;
+		} 
+		else if (values[nextEmpty] == null) 
+			modify = true;
+
+		if (modify)
+			values[nextIndex] = new Entry(key,value);
+		
+		return modify;
+	}
+	
+	/**
+     * This method searches through the {@link #values} list for 
+     * a first occurrence {@link value} containing a key 
+     * specified by the user. If a {@link value} containing 
+     * the key desired is found, the method removes and returns the 
+     * value. If it is not found, then the method will return null.
+     * 
+     * @return {@link value} 
+     *         or {@code null} if the value is not found. 
+     */
+	public V remove(K key) 
+	{
+		V value = lookup(key);
+		
+		if(value == null)
+			return null;
+		else
+		{
+			values[index] = null;
+			start =(start + 1) % values.length;
+			return value;
+		}		
+	}
+	
+	/**
+     * This method searches through the {@link #values} list for 
+     * a first occurrence {@link value} containing a key 
+     * specified by the user. If a {@link value} containing 
+     * the key desired is found, the method returns the 
+     * value. If it is not found, then the method will return null.
+     * 
+     * @return {@link value} 
+     *         or {@code null} if the value is not found. 
+     */
+	@SuppressWarnings("unchecked")
+	public V lookup(K key) 
+	{
+		if(start == nextEmpty && values[start] == null)
+			return null;
+		else
+		{
+			int last = (nextEmpty + 1) % values.length;
+			for (index = start; index != last; index = (index + 1) % values.length) 
+			{
+					if(((Entry)values[index]).key.compareTo(key) == 0)
+					{
+						V value = get(index);
+						return value;
+					}
+			}
+		}
+		return null;
+	}
+
+	/**
+     * Removes the specified value in the list, at the 
+     * specified position the user entered.
+     * 
+     * @param n  position of the {@link value}
+     *           that is being removed from the {@link #values}.
+     * 
+     * @return   {@link value} stored at the user entered 
+     *           position, or {@code null} if it is not found.
+     */
+	public V remove(int n)
+	{
+		V value = get(n);
+		values[n] = null;
+		start =(start + 1) % values.length;
+		return value;
+	}
+
+	/** 
+     * Returns the size of the list.
+     * 
+     * @return the current size of the list or {@code null}
+     *         if the list is empty.
+     */
+	public int size() 
+	{	
+		int size;
+		if(start == nextEmpty && values[start] == null)
+			size = 0;
+		else
+		{
+			int count = 1;
+			int current = start;
+			
+			while(current != nextEmpty)
+			{
+				++count;
+				current = (current + 1) % values.length;
+			}
+			size = count;	
+		}
+		return size;
+	}
+
+	/**
+     * Finds the specified {@link value} in the 
+     * {@link #values} list, beginning at the specified 
+     * position the user entered.
+     * 
+     * @param n  position of the {@link value}
+     *           being looked for
+     * 
+     * @return   the value stored at the user entered position, 
+     *           or {@code null} if it is not found
+     */
+	public V get(int n) 
+	{
+		if(start == nextEmpty && values[start] == null)
+			return null;
+		else
+		{
+			@SuppressWarnings("unchecked")
+			V value = ((Entry)values[n]).value;
+			return value;
+		}
+	}
+	
+	/** 
+	 * This method removes the {@link value} at the very top of 
+	 * the {@link values} list.
+	 * 
+	 * @return {@link #value} or {@code null} if the list is empty.
+     */
+	public V remove() 
+	{
+		if(start == nextEmpty && values[start] == null)
+			return null;
+		else 
+		{
+			@SuppressWarnings("unchecked")
+			V value = ((Entry)values[start]).value;
+			values[start] = null;
+		    start = (start + 1) % values.length;
+		    return value;
+		}
+	}
+	
+	/**
+     * This method cycles through the list adding all values in
+     * {@link #values} list to an array of size specified 
+     * by the {@link #size()} method. This array is then returned.
+     * 
+     * @return If the list is empty it will {@code null}. 
+     */
+	@SuppressWarnings("unchecked")
+	public Object[] toArray()
+	{	
+		int currentSize = size();
+		Object[] arrayList = new Object[currentSize];
+		
+		if(start == nextEmpty && values[start] == null)
+			return null;
+		else 
+		{
+			int currentIndex = start;
+			for(int i = 0; i < currentSize; ++i)
+			{
+				arrayList[i] = ((Entry)values[currentIndex]).value;
+				currentIndex = (currentIndex + 1) % values.length;
+				
+			}
+			return arrayList;
+		}
+		
+	}
+
+	/**
+     * This method generates a String containing visual 
+     * representation of each {@link value} in the list. If the 
+     * list is empty it will @return {@code null}.
+     */
+	@SuppressWarnings("unchecked")
+	public String toString()
+	{
+		String s = "";
+		int currentSize = size();
+		int currentIndex = start;
+		
+		for(int i = 1; i < currentSize; ++i)
+		{
+			s = s + "(" + ((Entry)values[currentIndex]).key + "," + ((Entry)values[currentIndex]).value + ") -- ";
+			currentIndex++;
+		}
+		return s;
+	}
+	
+	/** 
+     * Defines a single bounded Entry, for use by a SimpleBoundedList implementation.
+     * 
+     * This implementation uses "generics" to hold the information stored in the 
+     * list.
+     * 
+     */
+	private class Entry
+	{
+		protected K key;
+		protected V value;
+		
+		public Entry(K key, V value) 
+		{
+			this.key = key;
+			this.value = value;
+		}
+
+	}
+}
